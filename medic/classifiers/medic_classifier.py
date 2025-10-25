@@ -36,7 +36,7 @@ class FeatureExtractor(nn.Module):
         return self.mlp(x)
 
 
-class ProtoPNet(nn.Module):
+class Medic(nn.Module):
     def __init__(
             self,
             definitions: TDefinitionList,
@@ -45,7 +45,7 @@ class ProtoPNet(nn.Module):
             n_prototypes: int = 20,
             hidden_dim: int = 6,
     ) -> None:
-        """ProtoPNet classifier that uses prototypical parts to classify objects.
+        """MEDIC uses prototypical parts to classify objects.
 
         Args:
             definitions (TDefinitionList): list of feature definitions.

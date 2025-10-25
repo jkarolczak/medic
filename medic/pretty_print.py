@@ -4,7 +4,7 @@ import numpy as np
 import torch
 
 from medic import TDefinitionList
-from medic.classifiers.protopnet_classifier import ProtoPNet
+from medic.classifiers.medic_classifier import Medic
 from medic.nn.binning import (FuzzyBinning,
                               OneHotBinning)
 from medic.preprocessing import StandardScaler
@@ -59,7 +59,7 @@ def _print_categorical(
 
 
 def _binning_layers_to_human_readable(
-        model: ProtoPNet,
+        model: Medic,
         scaler: StandardScaler,
         definitions: TDefinitionList
 ) -> list[str]:
@@ -77,7 +77,7 @@ def _binning_layers_to_human_readable(
 
 
 def binning_layers(
-        model: ProtoPNet,
+        model: Medic,
         scaler: StandardScaler,
         definitions: TDefinitionList,
 ) -> None:
@@ -87,7 +87,7 @@ def binning_layers(
 
 
 def _parts_to_human_readable(
-        model: ProtoPNet,
+        model: Medic,
         scaler: StandardScaler,
         definitions: TDefinitionList,
         threshold: float = 0.1,
@@ -127,7 +127,7 @@ def _parts_to_human_readable(
 
 
 def prototypical_parts(
-        model: ProtoPNet,
+        model: Medic,
         scaler: StandardScaler,
         definitions: TDefinitionList,
         threshold: float = 0.1
@@ -141,7 +141,7 @@ def prototypical_parts(
 
 
 def predict_and_explain(
-        model: ProtoPNet,
+        model: Medic,
         x: torch.Tensor,
         scaler: StandardScaler,
         definitions: TDefinitionList,

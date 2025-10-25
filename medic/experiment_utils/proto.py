@@ -11,14 +11,14 @@ from torch.utils.data import (DataLoader,
 from wandb.sdk.wandb_run import Run
 
 from medic import pretty_print
-from medic.classifiers.protopnet_classifier import ProtoPNet
+from medic.classifiers.medic_classifier import Medic
 from medic.data import get_dataset
 from medic.preprocessing import StandardScaler
 from medic.utils import (train_model,
                          evaluate_model)
 
 
-def experiment_protopnet_pretty(
+def experiment_medic_pretty(
         dataset: str = "cirrhosis",
         batch_size: int = 32,
         hidden_dim: int = 5,
@@ -49,8 +49,8 @@ def experiment_protopnet_pretty(
 
     # --- Training ---
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = ProtoPNet(definitions=definitions, n_classes=n_classes, n_prototypes=n_prototypes, hidden_dim=hidden_dim
-                      ).to(device)
+    model = Medic(definitions=definitions, n_classes=n_classes, n_prototypes=n_prototypes, hidden_dim=hidden_dim
+                  ).to(device)
 
     criterion = nn.CrossEntropyLoss(weight=class_weights)
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
@@ -82,7 +82,7 @@ def experiment_protopnet_pretty(
     pretty_print.predict_and_explain(model, x_test[i], scaler, definitions=definitions)
 
 
-def experiment_protopnet_cv(
+def experiment_medic_cv(
         dataset: str = "cirrhosis",
         batch_size: int = 64,
         learning_rate: float = 0.005,
@@ -123,8 +123,8 @@ def experiment_protopnet_cv(
         train_loader = DataLoader(TensorDataset(x_train, y_train), batch_size=batch_size, shuffle=True)
         test_loader = DataLoader(TensorDataset(x_test, y_test), batch_size=batch_size, shuffle=False)
 
-        model = ProtoPNet(definitions=definitions, n_classes=n_classes, n_prototypes=n_prototypes, n_patches=2 * n_prototypes,
-                          hidden_dim=hidden_dim).to(device)
+        model = Medic(definitions=definitions, n_classes=n_classes, n_prototypes=n_prototypes, n_patches=2 * n_prototypes,
+                      hidden_dim=hidden_dim).to(device)
 
         criterion = nn.CrossEntropyLoss(weight=class_weights)
         optimizer = optim.Adam(model.parameters(), lr=learning_rate)
@@ -152,7 +152,7 @@ def experiment_protopnet_cv(
     return np.mean(accuracies).item()
 
 
-def experiment_protopnet_optuna(
+def experiment_medic_optuna(
         dataset: str = "cirrhosis",
         n_trials: int = 100,
         n_folds: int = 5,
@@ -160,7 +160,7 @@ def experiment_protopnet_optuna(
     def objective(trial):
         config = {
             "dataset": dataset,
-            "model_type": "protopnet",
+            "model_type": "medic",
             "batch_size": trial.suggest_int("batch_size", 16, 256, step=16),
             "learning_rate": trial.suggest_float("learning_rate", 1e-5, 1e-1, log=True),
             "hidden_dim": trial.suggest_int("hidden_dim", 2, 16),
@@ -178,7 +178,7 @@ def experiment_protopnet_optuna(
             reinit=True,
         )
 
-        acc = experiment_protopnet_cv(
+        acc = experiment_medic_cv(
             **config,
             run=run
         )

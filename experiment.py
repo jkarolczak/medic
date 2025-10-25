@@ -4,11 +4,11 @@ import click
 import numpy as np
 import torch
 
-
 ModelTType: TypeAlias = Literal["xgb", "rf", "mlp", "tree"]
 
+
 @click.command()
-@click.argument("experiment", type=click.Choice(["protopnet-pretty", "protopnet-cv", "protopnet-optuna",
+@click.argument("experiment", type=click.Choice(["medi-pretty", "medi-cv", "medi-optuna",
                                                  "sklearn-optuna"]))
 @click.option("--dataset", default="cirrhosis", type=click.Choice(["cirrhosis", "ckd", "diabetes"]), help="Dataset name.")
 @click.option("--batch_size", default=32, help="Batch size.")
@@ -22,21 +22,21 @@ def main(experiment: str, dataset: str, batch_size: int, learning_rate: float, p
     torch.manual_seed(42)
 
     match experiment:
-        case "protopnet-pretty":
-            from medic.experiment_utils.proto import experiment_protopnet_pretty
+        case "medic-pretty":
+            from medic.experiment_utils.proto import experiment_medic_pretty
 
-            experiment_protopnet_pretty(dataset=dataset, batch_size=batch_size, learning_rate=learning_rate,
+            experiment_medic_pretty(dataset=dataset, batch_size=batch_size, learning_rate=learning_rate,
                                         penalty_l1=penalty_l1, hidden_dim=hidden_dim, n_prototypes=n_prototypes,
                                         penalty_diversity=penalty_diversity)
-        case "protopnet-cv":
-            from medic.experiment_utils.proto import experiment_protopnet_cv
+        case "medic-cv":
+            from medic.experiment_utils.proto import experiment_medic_cv
 
-            experiment_protopnet_cv(dataset=dataset, batch_size=batch_size, learning_rate=learning_rate,
+            experiment_medic_cv(dataset=dataset, batch_size=batch_size, learning_rate=learning_rate,
                                     penalty_l1=penalty_l1, penalty_diversity=penalty_diversity)
-        case "protopnet-optuna":
-            from medic.experiment_utils.proto import experiment_protopnet_optuna
+        case "medic-optuna":
+            from medic.experiment_utils.proto import experiment_medic_optuna
 
-            experiment_protopnet_optuna(dataset=dataset)
+            experiment_medic_optuna(dataset=dataset)
         case "sklearn-optuna":
             from medic.experiment_utils.sklearn import experiment_classifier_optuna
 
