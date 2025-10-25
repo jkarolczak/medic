@@ -2,7 +2,7 @@ import torch
 from torch import nn as nn
 from torch.nn import functional as f
 
-from proto_intervals.nn import EPS
+from medic.nn import EPS
 
 
 class OneHotBinning(nn.Module):

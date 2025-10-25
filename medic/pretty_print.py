@@ -3,11 +3,11 @@ from typing import Iterable
 import numpy as np
 import torch
 
-from proto_intervals import TDefinitionList
-from proto_intervals.classifiers.protopnet_classifier import ProtoPNet
-from proto_intervals.nn.binning import (FuzzyBinning,
-                                        OneHotBinning)
-from proto_intervals.preprocessing import StandardScaler
+from medic import TDefinitionList
+from medic.classifiers.protopnet_classifier import ProtoPNet
+from medic.nn.binning import (FuzzyBinning,
+                              OneHotBinning)
+from medic.preprocessing import StandardScaler
 
 
 def _bins_to_str(
@@ -133,7 +133,9 @@ def prototypical_parts(
         threshold: float = 0.1
 ) -> None:
     human_readable = _parts_to_human_readable(model=model, scaler=scaler, definitions=definitions, threshold=threshold)
+    human_readable = list(set(human_readable))
     human_readable = sorted(human_readable, key=lambda x: len(x.split(" AND ")))
+
     for i, part in enumerate(human_readable):
         print(f"Proto-part {i}: {part}")
 
@@ -161,6 +163,8 @@ def predict_and_explain(
     bins = sum(_binning_layers_to_human_readable(model=model, scaler=scaler, definitions=definitions), [])
     instance_conditions = [bin_.replace("[", "(").replace("]", ")") for bin_, criterion in zip(bins, instance_bins) if
                            criterion.item()]
+
+    prototypical_parts(model=model, scaler=scaler, definitions=definitions, threshold=threshold)
     print("Ranking of parts:")
     for i, (distance, idx, part) in enumerate(ranking[:top_k]):
         matching = [val for val in instance_conditions if val in part]

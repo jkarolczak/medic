@@ -10,18 +10,19 @@ from torch.utils.data import (DataLoader,
                               TensorDataset)
 from wandb.sdk.wandb_run import Run
 
-from proto_intervals import pretty_print
-from proto_intervals.classifiers.protopnet_classifier import ProtoPNet
-from proto_intervals.data import get_dataset
-from proto_intervals.preprocessing import StandardScaler
-from proto_intervals.utils import (train_model,
-                                   evaluate_model)
+from medic import pretty_print
+from medic.classifiers.protopnet_classifier import ProtoPNet
+from medic.data import get_dataset
+from medic.preprocessing import StandardScaler
+from medic.utils import (train_model,
+                         evaluate_model)
 
 
 def experiment_protopnet_pretty(
         dataset: str = "cirrhosis",
         batch_size: int = 32,
         hidden_dim: int = 5,
+        n_prototypes: int = 40,
         learning_rate: float = 0.01,
         penalty_l1: float = 0.01,
         penalty_diversity: float = 0.01,
@@ -48,7 +49,8 @@ def experiment_protopnet_pretty(
 
     # --- Training ---
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = ProtoPNet(definitions=definitions, n_classes=n_classes, hidden_dim=hidden_dim).to(device)
+    model = ProtoPNet(definitions=definitions, n_classes=n_classes, n_prototypes=n_prototypes, hidden_dim=hidden_dim
+                      ).to(device)
 
     criterion = nn.CrossEntropyLoss(weight=class_weights)
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)

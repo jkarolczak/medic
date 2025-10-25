@@ -10,7 +10,7 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import StandardScaler
 from wandb.apis.public import Run
 
-from proto_intervals.data import get_dataset
+from medic.data import get_dataset
 
 
 def experiment_classifier(

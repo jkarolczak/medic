@@ -1,9 +1,9 @@
 import torch
 from torch import nn
 
-from proto_intervals import TDefinitionList
-from proto_intervals.nn.binning import (FuzzyBinning,
-                                        OneHotBinning)
+from medic import TDefinitionList
+from medic.nn.binning import (FuzzyBinning,
+                              OneHotBinning)
 
 
 class MLPClassifier(nn.Module):

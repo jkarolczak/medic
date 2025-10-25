@@ -1,6 +1,6 @@
 import torch
 
-from proto_intervals import TDefinitionList
+from medic import TDefinitionList
 
 
 class StandardScaler:

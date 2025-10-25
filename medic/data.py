@@ -6,7 +6,7 @@ import torch
 from torch import Tensor
 from ucimlrepo import fetch_ucirepo
 
-from proto_intervals import TDefinitionList
+from medic import TDefinitionList
 
 
 def load_artificial(n_samples: int = 1000) -> tuple[tuple[Tensor, Tensor], TDefinitionList]:
